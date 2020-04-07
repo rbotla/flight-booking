@@ -1,16 +1,32 @@
 import React from 'react';
 import axios from 'axios';
 import FligthSearch from './containers/FlightSearch';
+import FlightCard from './components/FlightCard';
+import FlightSearchResults from './containers/FlightSearchResults';
+import FlightWatchList from './containers/FlightWatchList';
 
 import './App.css';
 
 class App extends React.Component {
   state = {
-    flights: []
+    flights: [],
+    watchList: []
   }
   constructor(props) {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
+    this.addToWatchList=this.addToWatchList.bind(this);
+    this.removeFromWatchList=this.removeFromWatchList.bind(this);
+  }
+
+  removeFromWatchList(flight) {
+    const newList = this.state.watchList.map(f => f !== flight)
+    this.setState({watchList: newList});
+  }
+
+  addToWatchList(flight) {
+    const newList = [...this.state.watchList, flight];
+    this.setState({watchList: newList});
   }
 
   handleSearch(from, to, date) {
@@ -21,14 +37,26 @@ class App extends React.Component {
       `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/${from}-sky/${to}-sky/${dateString}?x-rapidapi-host=skyscanner-skyscanner-flight-search-v1.p.rapidapi.com&=`,
       {
         headers: {
-          'x-rapidapi-key': '',
-          'x-rapidapi-host': ''
+          'x-rapidapi-key': '102097f295msh274cd06f41845c9p1754adjsn97f897b9d136',
+          'x-rapidapi-host': 'skyscanner-skyscanner-flight-search-v1.p.rapidapi.com'
         }
       }
     )
     .then ((response) => {
       console.log(response);
-      this.setState({flights: response.data.Quotes})
+      const Carriers = response.data.Carriers
+      const findCarrierName = c => Carriers.find(x => c == x.CarrierId).Name  
+      const flights = response.data.Quotes.map(q => {
+        return {
+          Id: q.QuoteId,
+          Price: q.MinPrice,
+          Direct: q.Direct ? 'Direct Flight' : 'No Direct Flight',
+          Carrier: q.OutboundLeg.CarrierIds.map(c => findCarrierName(c)),
+          FlyDate: q.DepartureDate
+        }
+      })
+  
+      this.setState({flights: flights})
     })
     .catch(error => {
       alert('Error gettting information ', error)
@@ -42,33 +70,14 @@ class App extends React.Component {
         </header>
         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
           <FligthSearch style={{flex: 1}} handleSearch={this.handleSearch}/>
-          <FlightSearchResults style={{flex: 2}} flights={this.state.flights}/>
-          <FlightWatchList style={{flex: 1, backgroundColor: "green"}}/>
+          <FlightSearchResults style={{flex: 2}} flights={this.state.flights} addToWatchList={this.addToWatchList}/>
+          <FlightWatchList style={{flex: 1}} flights={this.state.watchList} removeFromWatchList={this.removeFromWatchList}/>
         </div>
       </div>
     );
   }
 }
 
-const FlightSearchResults = props => (
-  <div style={props.style}> 
-    {
-      props.flights.map( f => <FlightCard flight={f} />)
-    }
-  </div>
-)
 
-const FlightCard = props => (
-  <div style={props.style}>
-    <div>{props.flight.OutboundLeg.CarrierIds[0]}</div>
-  </div>
-);
-
-
-const FlightWatchList = props => (
-  <div style={props.style}>
-    Watch list
-  </div>
-)
 
 export default App;
