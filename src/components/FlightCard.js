@@ -1,7 +1,7 @@
 import React from 'react';
 
 const FlightCard = props => (
-  <div className="w3-card-4">
+  <div className="w3-card-4" style={{marginBottom:"5px"}}>
     <header className="w3-container w3-light-grey">
       <h3>{props.flight.Carrier}</h3>
     </header>

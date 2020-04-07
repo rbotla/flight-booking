@@ -70,8 +70,14 @@ class App extends React.Component {
         </header>
         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
           <FligthSearch style={{flex: 1}} handleSearch={this.handleSearch}/>
-          <FlightSearchResults style={{flex: 2}} flights={this.state.flights} addToWatchList={this.addToWatchList}/>
-          <FlightWatchList style={{flex: 1}} flights={this.state.watchList} removeFromWatchList={this.removeFromWatchList}/>
+          <div style={{flex: 2}} >
+            <h3>Search Results</h3>
+            <FlightSearchResults flights={this.state.flights} addToWatchList={this.addToWatchList}/>
+          </div>
+          <div style={{flex: 1, marginLeft: "5px"}} >
+          <h3>Watch List</h3>
+            <FlightWatchList style={{flex: 1}} flights={this.state.watchList} removeFromWatchList={this.removeFromWatchList}/>
+          </div>
         </div>
       </div>
     );
