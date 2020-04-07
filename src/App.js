@@ -20,13 +20,13 @@ class App extends React.Component {
   }
 
   removeFromWatchList(flight) {
-    console.log(flight)
     const newList = this.state.watchList.filter(f => f.Id !== flight.Id)
-    console.log(this.state.watchList.length, newList.length)
     this.setState({watchList: newList});
   }
 
   addToWatchList(flight) {
+    if (this.state.watchList.filter(f => f.Id === flight.Id).length > 0) return;
+
     const newList = [...this.state.watchList, flight];
     this.setState({watchList: newList});
   }
