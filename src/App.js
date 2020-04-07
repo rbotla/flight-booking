@@ -1,9 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
+import FligthSearch from './containers/FlightSearch';
+
 import './App.css';
 
 class App extends React.Component {
+  state = {
+    flights: {}
+  }
   constructor(props) {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
@@ -23,7 +27,7 @@ class App extends React.Component {
       }
     )
     .then ((response) => {
-      console.log(response);
+      this.setState({flights: {...response.data}})
     })
     .catch(error => {
       alert('Error gettting information ', error)
@@ -36,48 +40,12 @@ class App extends React.Component {
           Flight Booking App
         </header>
         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-          <FlightSearch style={{flex: 1}} handleSearch={this.handleSearch}/>
-          <FlightSearchResults style={{flex: 2, backgroundColor: "yellow"}}/>
+          <FligthSearch style={{flex: 1}} handleSearch={this.handleSearch}/>
+          <FlightSearchResults style={{flex: 2}} flights={this.state.flights}/>
           <FlightWatchList style={{flex: 1, backgroundColor: "green"}}/>
         </div>
       </div>
     );
-  }
-}
-
-class FlightSearch extends React.Component {    
-  state = {
-    from: '',
-    to: '',
-    date: ''
-  }
-
-  constructor(props) {
-    super(props);
-    this.handleChange=this.handleChange.bind(this);
-  }
-
-  handleChange = (event) => {
-    let name = event.target.name;
-    let val = event.target.value;
-    this.setState({[name]: val});
-  }
-
-  render() {
-    return (
-      <div className="form" style={this.props.style}>
-            <form onSubmit={() => this.props.handleSearch(this.state.from, this.state.to, this.state.date) }>
-              <label htmlFor="from">From</label>
-              <input type="text" id="from" name="from" placeholder="From.." onChange={this.handleChange}  value={this.state.from}/>
-              <label htmlFor="from">To</label>
-              <input type="text" id="to" name="to" placeholder="To.." onChange={this.handleChange}  value={this.state.to}/>
-              <label htmlFor="date">Date</label>
-              <input type="date" id="date" name="date" onChange={this.handleChange}  value={this.state.date}/>
-
-              <input type="submit" value="Submit" />
-            </form>
-      </div>
-    )
   }
 }
 
@@ -89,7 +57,7 @@ const FlightCard = props => (
 
 const FlightSearchResults = props => (
   <div style={props.style}>
-    results
+    {props.flights}
   </div>
 )
 
