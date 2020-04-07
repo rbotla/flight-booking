@@ -6,7 +6,7 @@ import './App.css';
 
 class App extends React.Component {
   state = {
-    flights: {}
+    flights: []
   }
   constructor(props) {
     super(props);
@@ -21,13 +21,14 @@ class App extends React.Component {
       `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/${from}-sky/${to}-sky/${dateString}?x-rapidapi-host=skyscanner-skyscanner-flight-search-v1.p.rapidapi.com&=`,
       {
         headers: {
-          'x-rapidapi-key': '102097f295msh274cd06f41845c9p1754adjsn97f897b9d136',
-          'x-rapidapi-host': 'skyscanner-skyscanner-flight-search-v1.p.rapidapi.com'
+          'x-rapidapi-key': '',
+          'x-rapidapi-host': ''
         }
       }
     )
     .then ((response) => {
-      this.setState({flights: {...response.data}})
+      console.log(response);
+      this.setState({flights: response.data.Quotes})
     })
     .catch(error => {
       alert('Error gettting information ', error)
