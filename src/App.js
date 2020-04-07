@@ -21,8 +21,8 @@ class App extends React.Component {
       `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/${from}-sky/${to}-sky/${dateString}?x-rapidapi-host=skyscanner-skyscanner-flight-search-v1.p.rapidapi.com&=`,
       {
         headers: {
-          'x-rapidapi-key': '',
-          'x-rapidapi-host': ''
+          'x-rapidapi-key': '102097f295msh274cd06f41845c9p1754adjsn97f897b9d136',
+          'x-rapidapi-host': 'skyscanner-skyscanner-flight-search-v1.p.rapidapi.com'
         }
       }
     )
@@ -50,17 +50,20 @@ class App extends React.Component {
   }
 }
 
+const FlightSearchResults = props => (
+  <div style={props.style}> 
+    {
+      props.flights.map( f => <FlightCard flight={f} />)
+    }
+  </div>
+)
+
 const FlightCard = props => (
   <div style={props.style}>
-    {props.name}
+    <div>{props.flight.OutboundLeg.CarrierIds[0]}</div>
   </div>
 );
 
-const FlightSearchResults = props => (
-  <div style={props.style}>
-    {props.flights}
-  </div>
-)
 
 const FlightWatchList = props => (
   <div style={props.style}>
